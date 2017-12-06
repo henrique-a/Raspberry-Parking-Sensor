@@ -47,7 +47,7 @@ class Screen:
                 # Load default font.
                 # Alternatively load a TTF font.
                 # Some nice fonts to try: http://www.dafont.com/bitmap.php
-                # font = ImageFont.truetype('Minecraftia.ttf', 8)
+                # self.font = ImageFont.truetype('arial.ttf', 8)
 
                 self.font = ImageFont.load_default()
                 
@@ -69,10 +69,10 @@ class Screen:
                 self.draw.rectangle((0,0,LCD.LCDWIDTH,LCD.LCDHEIGHT), outline=255, fill=255)
 
                 f = 255*np.ones(12)
-                self.print_nokia(f)
+                self.print_bars(f)
         
 
-        def print_nokia(self, f):
+        def print_bars(self, f):
                 
                 # Inicializa os retângulos de indicação
                 # Ultima linha
@@ -103,9 +103,9 @@ class Screen:
 
         
         # Write some text.
-        def write_text(self, message):
+        def write_text(self, message, position):
                 self.draw.rectangle((0,0,83,18), outline=255, fill=255)
-                self.draw.text((8,6), message, font=self.font)
+                self.draw.text(position, message, font=self.font)
 
 
 def main():	

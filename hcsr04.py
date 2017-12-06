@@ -69,7 +69,7 @@ class HCSR04():
         loop_init = time.time()
         while(self.echo.read() == '0'):
             #echo_init = time.time()
-            if time.time() - loop_init > 0.5:
+            if time.time() - loop_init > 0.1:
                 break
             pass
         echo_init = time.time()
@@ -126,7 +126,7 @@ def main():
     sensor = HCSR04(4, 19)
     while(True):
         print(sensor.distance_cm())
-        time.sleep(0.5)
+        time.sleep(0.1)
 
 if __name__ == '__main__':
     main()
