@@ -126,7 +126,7 @@ def main():
     sensor = HCSR04(4, 19)
     while(True):
         print(sensor.distance_cm())
-        time.sleep(sensor.echo_timeout)
+        time.sleep(0.5)
 
 if __name__ == '__main__':
     main()
