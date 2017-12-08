@@ -1,15 +1,38 @@
 import RPi.GPIO as GPIO 
 import time 
+import threading as th
 
-def init_buzzer(pin,freq):
-    GPIO.setmode(GPIO.BCM) 
-    GPIO.setup(12, GPIO.OUT) 
-    buzzer = GPIO.PWM(12,100)
-    return buzzer
+class Buzzer(th.Thread):
 
-def buzz(pitch, duration,DC,p):
-	p.ChangeFrequency(pitch)
-	p.start(DC)
-   	time.sleep(duration)
-    	p.stop()
-    	time.sleep(1)
+    def __init__(self, pin, freq, level):
+        self.level = level
+        GPIO.setmode(GPIO.BCM) 
+        GPIO.setup(pin, GPIO.OUT) 
+        self.pwm = GPIO.PWM(pin,freq)
+        th.Thread.__init__(self)
+        self._stop_event = th.Event()
+
+    def stop(self):
+        self._stop_event.set()
+        
+    def is_stopped(self):
+        return self._stop_event.is_set()
+        
+    def run(self):
+        while(not self.is_stopped()):
+            self.buzz(100, self.duration, 90)
+                
+    def buzz(self, pitch, duration, DC):
+        self.pwm.ChangeFrequency(pitch)
+        self.pwm.start(DC)
+        time.sleep(duration)
+        self.pwm.stop()
+        time.sleep(1)
+
+def main():
+    b = Buzzer(18, 100,0)
+    b.run()
+    #buzz(100, 5, 90, b)
+    
+if __name__ == '__main__':
+    main()

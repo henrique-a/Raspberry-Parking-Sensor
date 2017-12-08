@@ -23,7 +23,7 @@ import time,numpy as np
 
 import Adafruit_Nokia_LCD as LCD
 import Adafruit_GPIO.SPI as SPI
-
+from datetime import datetime
 from PIL import Image
 from PIL import ImageDraw
 from PIL import ImageFont
@@ -49,10 +49,10 @@ class Screen:
                 # Some nice fonts to try: http://www.dafont.com/bitmap.php
                 # self.font = ImageFont.truetype('arial.ttf', 8)
 
-                self.font = ImageFont.load_default()
-                
+                self.font = ImageFont.truetype('fontTeste.ttf',11)
+                #self.font = ImageFont.load_default()
                 # Initialize library.
-                self.disp.begin(contrast=30)
+                self.disp.begin(contrast=60)
 
                 # Clear display.
                 #disp.clear()
@@ -61,7 +61,7 @@ class Screen:
                 # Create blank image for drawing.
                 # Make sure to create image with mode '1' for 1-bit color.
                 self.image = Image.new('1', (LCD.LCDWIDTH, LCD.LCDHEIGHT))
-
+                
                 # Get drawing object to draw on image.
                 self.draw = ImageDraw.Draw(self.image)
 
@@ -73,7 +73,6 @@ class Screen:
         
 
         def print_bars(self, f):
-                
                 # Inicializa os retângulos de indicação
                 # Ultima linha
                 self.draw.rectangle((1,42,27,47), outline = 0, fill=int(f[0]))
@@ -91,29 +90,33 @@ class Screen:
                 self.draw.rectangle((7,21,21,26), outline = 0, fill=int(f[9]))
                 self.draw.rectangle((35,21,49,26), outline = 0, fill=int(f[10]))
                 self.draw.rectangle((63,21,77,26), outline = 0, fill=int(f[11]))
-
-                
+                #print("to no print")
                 # Display image.
                 self.disp.image(self.image)
                 self.disp.display()
-
+                #print("mostrei tudo")
                 #print('Press Ctrl-C to quit.')
-                #while True:
-                #time.sleep(1.0)
+               # while True:
+                   # time.sleep(1.0)
 
         
         # Write some text.
         def write_text(self, message, position):
                 self.draw.rectangle((0,0,83,18), outline=255, fill=255)
+                now = datetime.now()
+                clock = str(now.hour) + ":" + str(now.minute)
+                pos = (20,0)
+                self.draw.text(pos, clock, font=self.font) 
                 self.draw.text(position, message, font=self.font)
+                self.disp.image(self.image)
+                self.disp.display()
 
-
-def main():	
-        f=np.zeros(12)
-        print(str(f[0]))
-        init_nokia(f)
-        f[0]=255
-        init_nokia(f)
-
+def main():
+        s=Screen()
+        #while(True):
+        #s.write_text("Teste 1234",(20,10))
+        
 if __name__ == '__main':
         main()
+#main()
+    
