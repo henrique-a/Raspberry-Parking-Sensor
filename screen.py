@@ -33,8 +33,8 @@ class Screen:
         def __init__(self):
                 SPI_PORT = 0
                 SPI_DEVICE = 0
-                SCLK = 4
-                DIN = 17
+                SCLK = 11
+                DIN = 9
                 DC = 23
                 RST = 24
                 CS = 8
@@ -52,7 +52,7 @@ class Screen:
                 self.font = ImageFont.truetype('fontTeste.ttf',11)
                 #self.font = ImageFont.load_default()
                 # Initialize library.
-                self.disp.begin(contrast=60)
+                self.disp.begin(contrast=40)
 
                 # Clear display.
                 #disp.clear()
@@ -94,11 +94,7 @@ class Screen:
                 # Display image.
                 self.disp.image(self.image)
                 self.disp.display()
-                #print("mostrei tudo")
-                #print('Press Ctrl-C to quit.')
-               # while True:
-                   # time.sleep(1.0)
-
+                
         
         # Write some text.
         def write_text(self, message, position):
@@ -109,14 +105,4 @@ class Screen:
                 self.draw.text(pos, clock, font=self.font) 
                 self.draw.text(position, message, font=self.font)
                 self.disp.image(self.image)
-                self.disp.display()
-
-def main():
-        s=Screen()
-        #while(True):
-        #s.write_text("Teste 1234",(20,10))
-        
-if __name__ == '__main':
-        main()
-#main()
-    
+                self.disp.display()    

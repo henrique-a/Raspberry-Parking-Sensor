@@ -39,11 +39,6 @@ class Pin():
 class HCSR04():
 
     def __init__(self, trigger_pin, echo_pin, echo_timeout=0.02332):
-        """
-        trigger_pin: Pino de saída que manda os pulsos
-        echo_pin: Pino de leitura para medir a distância.
-        echo_timeout_us: Timeout em microsegundos para ler o valor do pino echo. 
-        """
         self.echo_timeout = echo_timeout
         # Init trigger pin (out)
         self.trigger = Pin(trigger_pin, "out")
@@ -53,11 +48,6 @@ class HCSR04():
         self.echo = Pin(echo_pin, "in")
 
     def send_pulse(self):
-        """
-        Manda o trigger enviar um pulso e manda o echo ler.
-        Então calculamos o tempo em microsegundos entre o momento que o pulso é
-        enviado e momento que o echo ler o pulso.
-        """
         self.trigger.write(0)
         time.sleep(1)
         self.trigger.write(1)
@@ -79,18 +69,17 @@ class HCSR04():
             #echo_end = time.time()
             pass
         echo_end = time.time()
-        print("Inicio: " + str(echo_init))
-        print("Fim: " + str(echo_end))
+        #print("Inicio: " + str(echo_init))
+        #print("Fim: " + str(echo_end))
         delay = echo_end - echo_init
-        print("Delay: " + str(delay))
+        #print("Delay: " + str(delay))
         if delay <= self.echo_timeout:
             return delay
         else:
             return -1
 
     def distance_mm(self):
-        """
-        Retorna a distância em milímetros.
+        """ Retorna a distância em milímetros.
         """
         delay = self.send_pulse()
         if delay is -1:
@@ -102,12 +91,8 @@ class HCSR04():
         # (the pulse walk the distance twice) and by 29.1 becasue
         # the sound speed on air (343.2 m/s), that It's equivalent to
         # 0.34320 mm/us that is 1mm each 2.91us
-        # pulse_time // 2 // 2.91 -> pulse_time // 5.82 -> pulse_time * 100 // 582 
-        
+        # pulse_time
     def distance_cm(self):
-        """
-        Retorna a distância em centmétros
-        """
         delay = self.send_pulse()
         if delay is -1:
             return -1

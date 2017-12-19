@@ -2,76 +2,66 @@ import hcsr04
 import screen
 from datetime import datetime
 import time
-import threading as th
 import numpy as np
-import buzzer
+import buzzerth as bz
+import threading as th
+
+global min_dist
+min_dist = 200
+
+def alarm():
+    
+    if 75 < min_dist <= 150:
+        for i in range(3):
+            bz.buzz(18,2,95)
+    if 30 < min_dist <= 75:
+        for i in range(4):
+            bz.buzz(18, 0.8, 95)
+    if min_dist <= 30:
+        for i in range(5):
+            bz.buzz(18, 0.2, 95)
+
 
 def main():
-    
-    sensor1 = hcsr04.HCSR04(4,19)
-    sensor2 = hcsr04.HCSR04(16,26)
-    sensor3 = hcsr04.HCSR04(x,y)
+    global min_dist
+    sensor1 = hcsr04.HCSR04(4, 19)
+    sensor2 = hcsr04.HCSR04(16, 26)
+    sensor3 = hcsr04.HCSR04(13, 6)
     nokia = screen.Screen()
     f = 255*np.ones(12)
     nokia.print_bars(f)
-    #b = buzzer.Buzzer(18, 100,0)
-    #b.stop()
-        
+    z = bz.init_buzzer(18, 100)
+    b = th.Thread(target = alarm, args =())
+
     while(True):
+
         dists = []
         dist1 = sensor1.distance_cm()
-        stop_event = th.Event()
         if 150 < dist1:
-            #b.stop()
-            #b.join()
             f[0] = 255
             f[3] = 255
             f[6] = 255
             f[9] = 255
             nokia.print_bars(f)
         elif 75 < dist1 <= 150:
-            #if b.level != 3:
-             #   b.stop()
-              #  b.join()
-               # b = buzzer.Buzzer(19, 100, 3)
-                #b.start()
             f[0] = 0
             f[3] = 255
             f[6] = 255
             f[9] = 255
             nokia.print_bars(f)
         elif 50 < dist1 <= 75:
-            #if b.level != 2:
-             #   b.stop()
-              #  b.join()
-               # b = buzzer.Buzzer(19, 100, 2)
-                #b.start()
             f[0] = 0
             f[3] = 0
             f[6] = 255
             f[9] = 255
             nokia.print_bars(f)
         elif 25 < dist1 <= 50:
-          #  if b.level != 1:
-            #    b.stop()
-            #    b.join()
-           #     b = buzzer.Buzzer(18, 50, 1)
-           #     b.start()
             f[0] = 0
             f[3] = 0
             f[6] = 0
             f[9] = 255
             nokia.print_bars(f)
         elif 0 < dist1 < 25:
-            #b = buzzer.Buzzer(18, 50, 0)
-            #b.start()
-            #if b.level != 0:
-            #    b.stop()
-             #   b.join()
-              #  b = buzzer.Buzzer(18, 100, 0)
-               # b.start()
-                #b.run()
-##                print("vai rodar")
             f[0] = 0
             f[3] = 0
             f[6] = 0
@@ -109,8 +99,7 @@ def main():
             f[4] = 0
             f[7] = 0
             f[10] = 0
-            nokia.print_bars(f)
-      '''   
+            nokia.print_bars(f) 
         dist3 = sensor3.distance_cm()
         
         if 150 < dist3:
@@ -143,19 +132,20 @@ def main():
             f[8] = 0
             f[11] = 0
             nokia.print_bars(f)
-        '''
+        
         if dist1 != -1:
             dists.append(dist1)        
         if dist2 != -1:
             dists.append(dist2)
-        #if dist3 != -1:
-         #   dists.append(dist3)
+        if dist3 != -1:
+            dists.append(dist3)
             
         min_dist = min(dists)
-        
         distance = str(min_dist) + " cm"
         position = (20,10)
         nokia.write_text(distance, position)
-        
-
+        if(not b.is_alive()):
+            b = th.Thread(target = alarm, args = ())
+            b.start()
+            
 main()
