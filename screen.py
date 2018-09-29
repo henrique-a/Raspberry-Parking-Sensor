@@ -49,7 +49,7 @@ class Screen:
                 # Some nice fonts to try: http://www.dafont.com/bitmap.php
                 # self.font = ImageFont.truetype('arial.ttf', 8)
 
-                self.font = ImageFont.truetype('fontTeste.ttf',11)
+                self.font = ImageFont.truetype('font.ttf',11)
                 #self.font = ImageFont.load_default()
                 # Initialize library.
                 self.disp.begin(contrast=40)

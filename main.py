@@ -3,35 +3,34 @@ import screen
 from datetime import datetime
 import time
 import numpy as np
-import buzzerth as bz
+import buzzer as bz
 import threading as th
 
-global min_dist
 min_dist = 200
 
 def alarm():
     
     if 75 < min_dist <= 150:
-        for i in range(3):
-            bz.buzz(18,2,95)
+        for _ in range(3):
+            bz.buzz(18, 2, 95)
     if 30 < min_dist <= 75:
-        for i in range(4):
+        for _ in range(4):
             bz.buzz(18, 0.8, 95)
     if min_dist <= 30:
-        for i in range(5):
+        for _ in range(5):
             bz.buzz(18, 0.2, 95)
 
 
 def main():
-    global min_dist
+
     sensor1 = hcsr04.HCSR04(4, 19)
     sensor2 = hcsr04.HCSR04(16, 26)
     sensor3 = hcsr04.HCSR04(13, 6)
     nokia = screen.Screen()
     f = 255*np.ones(12)
     nokia.print_bars(f)
-    z = bz.init_buzzer(18, 100)
-    b = th.Thread(target = alarm, args =())
+    buzz = bz.init_buzzer(18, 100)
+    alarm_thread = th.Thread(target=alarm)
 
     while(True):
 
@@ -139,13 +138,14 @@ def main():
             dists.append(dist2)
         if dist3 != -1:
             dists.append(dist3)
-            
+        
+        global min_dist
         min_dist = min(dists)
         distance = str(min_dist) + " cm"
-        position = (20,10)
+        position = (20, 10)
         nokia.write_text(distance, position)
-        if(not b.is_alive()):
-            b = th.Thread(target = alarm, args = ())
-            b.start()
+        if(not alarm_thread.is_alive()):
+            alarm_thread = th.Thread(target=alarm)
+            alarm_thread.start()
             
 main()

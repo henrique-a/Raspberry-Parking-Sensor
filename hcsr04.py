@@ -78,20 +78,21 @@ class HCSR04():
         else:
             return -1
 
+    """ 
+    To calculate the distance we get the pulse_time and divide it by 2 
+    (the pulse walk the distance twice) and by 29.1 becasue
+    the sound speed on air (343.2 m/s), that It's equivalent to
+    0.34320 mm/us that is 1mm each 2.91us
+    pulse_time
+    """
     def distance_mm(self):
-        """ Retorna a distância em milímetros.
-        """
         delay = self.send_pulse()
         if delay is -1:
             return -1
         else:        
             mm = delay * 171500
             return round(mm, 2)
-        # To calculate the distance we get the pulse_time and divide it by 2 
-        # (the pulse walk the distance twice) and by 29.1 becasue
-        # the sound speed on air (343.2 m/s), that It's equivalent to
-        # 0.34320 mm/us that is 1mm each 2.91us
-        # pulse_time
+        
     def distance_cm(self):
         delay = self.send_pulse()
         if delay is -1:
@@ -99,14 +100,7 @@ class HCSR04():
         else:
             cm = delay * 17150
             return round(cm, 2)
-        # To calculate the distance we get the pulse_time and divide it by 2 
-        # (the pulse walk the distance twice) and by 29.1 becasue
-        # the sound speed on air (343.2 m/s), that It's equivalent to
-        # 0.034320 cm/us that is 1cm each 29.1us
-
-
         
-
 def main():
     sensor = HCSR04(4, 19)
     while(True):
